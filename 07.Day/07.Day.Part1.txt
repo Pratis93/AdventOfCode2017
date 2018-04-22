@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\07.Day\07.Puzzle.txt", ASCIIEncoding.ASCII))
+                {
+
+                    string Words = reader.ReadToEnd();
+
+                    string[] rows = Words.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    List<string> Rows = new List<string>(rows);
+                    List<string> Main = new List<string>();
+                    List<string> Branch = new List<string>();
+                    int indeks = 0;
+                    int len = 0;
+                    foreach(string s in rows)
+                    {
+                        indeks = 0;
+                       string [] Spillist =  s.Split(new string[] { " ", "\t" ,",",}, StringSplitOptions.RemoveEmptyEntries);
+                        len = Spillist.Length;
+
+                        Main.Add(Spillist[indeks]);
+
+                         if(len>3)
+                        { 
+                            indeks += 3;
+
+                            while (indeks < len)
+                            {
+                                Branch.Add(Spillist[indeks]);
+
+
+                                indeks++;
+                            }
+                        }
+                    }
+
+
+                    bool znaleziono = false;
+                    indeks = 0;
+                    int indexo = 0;
+
+                    while (!znaleziono)
+                    {
+                        string szukany = Main[indexo];
+                       
+                        indexo = Branch.IndexOf(szukany);
+
+                        if (indexo == -1)
+                        {
+                            MessageBox.Show(szukany);
+                            znaleziono = true;
+                        }
+                        indexo++;
+
+                    }
+
+                    MessageBox.Show(Branch.Count.ToString());
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}

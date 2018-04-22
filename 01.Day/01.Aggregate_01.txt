@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader("C:\\Users\\Luck\\Desktop\\test.txt", ASCIIEncoding.ASCII))
+                {
+                    string dane;
+                    
+                    int sum = 0;
+                    int len = 0;
+
+
+                    int a = 0;
+                    int b = 0;
+
+                    dane = reader.ReadLine().ToString();
+                    len = dane.Length;
+
+                    for (int counter = 0; counter < (len); counter++)
+                    {
+
+                        if (counter != len -1)
+                        {
+                            b = dane[counter] - '0';
+                            a = dane[counter + 1] - '0';
+
+                        }else
+                        {
+                            b = dane[len - 1] - '0';
+                            a = dane[0] - '0';
+                        }
+                        
+                        if (a == b)
+                        {
+                            sum = sum + (dane[counter] - '0');
+                        }
+                    }
+                           lblCount.Text = sum.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+
+
+
+
+    }
+}

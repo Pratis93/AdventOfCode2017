@@ -1,0 +1,130 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+
+
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+
+
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\09.Day\09.Puzzle.txt", ASCIIEncoding.ASCII))
+                {
+
+                    string words = reader.ReadToEnd();
+                    int len = words.Length;
+
+                    List<char> garbage = new List<char>();
+
+
+                    //usun smieci po wykrzyknikach
+                    for (int i = 0; i < len; i++)
+                    {
+                        if (words[i] == '!')
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            garbage.Add(words[i]);
+                        }
+
+                    }
+
+                    //Usun smieci wystepujace pomiedzy <>   
+
+                    int begin = -1;
+                    int end = -1;
+
+                    for (int idx = 0; idx < garbage.Count; idx++)
+                    {
+
+
+                        //znalazl 1 znak  begin = 4
+                        if (begin == -1)
+                        {
+                            if (garbage[idx] == '<')
+                            {
+                                begin = idx;
+                            }
+                        }
+
+                        if (begin >= 0)
+                        {
+                            if (garbage[idx] == '>')
+                            {
+                                end = idx;
+
+                                int size = end - begin;
+
+                                garbage.RemoveRange(begin, (size + 1));  // 5 znakow = odleglosc 4
+
+                                begin = -1;
+                                end = -1;
+                                idx = idx - size; // usunieto 4 elementy, przesun wskaznik o 4 elementy do tylu
+                            }
+                        }
+                    }
+
+                    //usieniecie przecinkow
+                    for (int i = 0; i < garbage.Count; i++)
+                    {
+
+                        if (garbage[i] == ',')
+                        {
+                            garbage.RemoveRange(i, 1);
+                            i--;
+                        }
+
+                    }
+
+                    //zliczenie ilosci grup
+                    int tally = 0;
+                    int score = 0;
+                    foreach (char d in garbage)
+                        if (d == '{')
+                        {
+
+                            score += 1 + tally;
+                            tally += 1;
+                        }
+                        else if (d == '}')
+                        {
+                            tally -= 1;
+                        }
+
+
+
+
+                    MessageBox.Show(score.ToString());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}

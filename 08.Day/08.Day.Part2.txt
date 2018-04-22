@@ -1,0 +1,170 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+
+
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+
+            void compare(string[] element, List<int> Value, List<string> Name)
+            {
+
+                //Pobierz indeky nazw
+                int idfirstname = Name.IndexOf(element[0]);
+                int idsecname = Name.IndexOf(element[4]);
+
+                int firstvalue = Value[idfirstname];
+                int secvalue = Value[idsecname];
+
+
+                if (element[1] == "inc")
+                {
+                    firstvalue += Int32.Parse(element[2]);
+                }
+
+                if (element[1] == "dec")
+                {
+                    firstvalue -= Int32.Parse(element[2]);
+                }
+
+                Value[idfirstname] = firstvalue;
+            }
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\08.Day\08.Puzzle.txt", ASCIIEncoding.ASCII))
+                {
+
+                    string words = reader.ReadToEnd();
+
+                    string[] rows = words.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    int len = rows.Length;
+
+                    int MaxValue = 0;
+
+                    List<int> Value = new List<int>();
+                    List<string> Name = new List<string>();
+
+                    for (int i = 0; i < len; i++)
+                    {
+                        string[] element = rows[i].Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        //sprawdz czy zmienne znajduja sie w bazie;
+
+                        if (!Name.Contains(element[0]))
+                        {
+                            Name.Add(element[0]);
+                            Value.Add(0);
+                        }
+
+                        if (!Name.Contains(element[4]))
+                        {
+                            Name.Add(element[4]);
+                            Value.Add(0);
+                        }
+
+
+                        int idsecname = Name.IndexOf(element[4]);
+                        int secvalue = Value[idsecname];
+                        
+
+
+                        string sign = element[5];
+                        switch (sign)
+                        {
+                            case "<":
+                                if (secvalue < Int32.Parse(element[6]))
+                                {
+                                    compare(element, Value, Name);
+                                }
+                                break;
+
+                            case ">":
+                                if (secvalue > Int32.Parse(element[6]))
+                                {
+                                    compare(element, Value, Name);
+
+                                }
+                                break;
+
+                            case "<=":
+                                if (secvalue <= Int32.Parse(element[6]))
+                                {
+
+                                    compare(element, Value, Name);
+                                }
+
+                                break;
+
+                            case ">=":
+                                if (secvalue >= Int32.Parse(element[6]))
+                                {
+                                    compare(element, Value, Name);
+
+                                }
+
+                                break;
+
+                            case "!=":
+
+                                if (secvalue != Int32.Parse(element[6]))
+                                {
+                                    compare(element, Value, Name);
+
+                                }
+
+                                break;
+
+                            case "==":
+                                if (secvalue == Int32.Parse(element[6]))
+                                {
+                                    compare(element, Value, Name);
+
+                                }
+                                break;
+
+                            default:
+
+                                MessageBox.Show("nieprawidlowy znak");
+                                break;
+                        }
+
+                        int tmp = Value.Max();
+
+                        if (tmp > MaxValue)
+                        {
+                            MaxValue = tmp;
+                        }
+                    }
+
+                    int max = Value.Max();
+                    MessageBox.Show(MaxValue.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}

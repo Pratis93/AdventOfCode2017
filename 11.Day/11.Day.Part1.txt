@@ -1,0 +1,97 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+        static int childX = 0;
+        static int childY = 0;
+
+        static int furthest = 0;
+
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+
+
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\11.Day\11.Puzzle.txt", ASCIIEncoding.ASCII))
+                {
+
+                    string words = reader.ReadToEnd();
+
+                    string[] dir = words.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                    int x = 0;
+                    int y = 0;
+                    int z = 0;
+                    List<int> maxint = new List<int>();
+                    var maxdist = 0;
+
+
+                    foreach (string d in dir)
+                    {
+                        if (d == "n")
+                        {
+                            y += 1;
+                            z -= 1;
+                        }
+                        else if (d == "s")
+                        {
+                            y -= 1;
+                            z += 1;
+                        }
+                        else if (d == "ne")
+                        {
+                            x += 1;
+                            z -= 1;
+                        }
+                        else if (d == "sw")
+                        {
+                            x -= 1;
+                            z += 1;
+                        }
+                        else if (d == "nw")
+                        {
+                            x -= 1;
+                            y += 1;
+                        }
+                        else if (d == "se")
+                        {
+                            x += 1;
+                            y -= 1;
+                        }
+
+                        
+                    }
+                  
+                    var dist = (Math.Abs(x) + Math.Abs(y) + Math.Abs(z)) / 2;
+                    MessageBox.Show(dist.ToString());
+                    
+            }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}

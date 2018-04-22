@@ -1,0 +1,121 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\02.Day\02.Numbers.txt", ASCIIEncoding.ASCII))
+                {
+                    //zmienna do ktorej zostana przeslane surowe dane. 
+                    string dane;
+
+                    //Tablica pomocnicza przechowujaca odebrane dane.
+                    int row = 16;
+                    int column = 16;
+                    int[,] matrix = new int[row, column];
+
+
+
+                    //zmienne pomocniczne sluzace do znalezienia sumy
+                    int max = 0;
+                    int min = 10000;
+                    int sum = 0;
+                    int tmp;
+
+                    //odbierz surowe dane. 
+                    dane = reader.ReadToEnd();
+
+                    //po napotkaniu na znak nowej lini, umiesc wczesniej napotkane dane w Tabeli. 
+                    string[] rows = dane.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+                    //Zmienne indeksujace tablice pomocnicza
+                    row = 0;
+                    column = 0;
+
+                    foreach (string s in rows)
+                    {
+                        string[] element = s.Split(new char[] { '\t', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (string ss in element)
+                        {
+                            tmp = Int32.Parse(ss);
+
+                            //znajdz minimum badz maximum
+                            if (max < tmp) max = tmp;
+                            if (min > tmp) min = tmp;
+
+                            //wpisz wartosc do tabeli
+                            matrix[row, column] = tmp;
+
+                            //przejdz do nastepnej kolumny
+                            ++column;
+                        }
+                        //przejdz do nastepnego wiersza
+                        ++row;
+
+                        //tresc zadania
+                        sum += (max - min);
+
+                        //Przygotowanie do odbioru nowego wiersza
+                        max = 0;
+                        min = 10000;
+                        column = 0;
+                    }
+
+                    //zadanie 2.
+                    
+                    sum = 0;
+                    //funkcja przeleci przez wiersze
+                    for (row = 0; row < matrix.GetLength(0); row++)
+                    {
+                        //funkcja "pobiera" mianownik z kolumny
+                        for (column = 0; column < (matrix.GetLength(1)); column++)
+                        {
+                            //funkcja "pobiera" ulamek z kolumny
+                            for (tmp = 0; tmp < matrix.GetLength(1); tmp++)
+                            {   //nie dziel sama przez siebie
+                                if (tmp != column)
+                                {   //dzielenie jest calkowite gdy modulo == 0;
+                                    if ((matrix[row, column]) % (matrix[row, tmp]) == 0)
+                                    {
+                                        //tresc zadania
+                                        sum = sum + (matrix[row, column]) / (matrix[row, tmp]);
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                    //wyswietl wynik
+                    MessageBox.Show(sum.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}

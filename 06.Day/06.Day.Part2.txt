@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\06.Day\06.Puzzle.txt", ASCIIEncoding.ASCII))
+                {
+
+                    string Words = reader.ReadToEnd(); //Pobierz z obiektu reader dane. 
+                    string[] Rows = Words.Split(new char[] { '\t' , '\n',' ','\r'},StringSplitOptions.RemoveEmptyEntries); //Podziel wyraz na slowa
+
+                    List<int> IntigerList = Rows.Select(x => Int32.Parse(x)).ToList(); //Zamien stringa na inta
+
+                    int len = IntigerList.Count;
+                    bool repeat = false;
+                    int MaxIndex; //zmienna sluzaca do wskazania indeksu zmiennej z najwieksza wartosci lub do wskaznia zmiennej inkrementowanej. 
+                    int Spill; //ilosc "elementów" do rozdysponowania. 
+
+                    int step = 0;//Ilosc wykonanych kroków
+                    int allstep = 0;
+
+                    List<string> CompareList = new List<string>(); //Lista sluzaca do przechowywania danych wystepionych w programie. 
+
+                    while (!repeat)
+                    {
+                        MaxIndex = IntigerList.IndexOf(IntigerList.Max());  //MaxIndeks = Indeks najwiekszego elementu w liscie. 
+
+                        Spill = IntigerList[MaxIndex];  //Ilosc "elementów" do rozsypania
+                        IntigerList[MaxIndex] = 0;  //wyzeruj element tablicy z najwiekszym elementem.
+                        
+                        //Rozdysponuj "elementami"
+                        while(Spill != 0)
+                        {
+                            ++MaxIndex;
+                           
+                            if (MaxIndex == len) MaxIndex = 0;
+                            IntigerList[MaxIndex] = IntigerList[MaxIndex] + 1;
+                            --Spill;
+                      }
+                        //Zamien string -> int. Polacz slowa int w wyraz(1 liczbe). Sprawdz czy liczba wystepuje w CompareList.
+                        List<string> IntToStringList = IntigerList.Select(x => Convert.ToString(x)).ToList(); 
+                        var JoinList = String.Join("", IntToStringList.ToArray());
+                        repeat = CompareList.Contains(JoinList);
+
+                        
+                        if (!repeat)
+                        {
+                            CompareList.Add(JoinList);
+                            step++;
+                        }
+                        else
+                        {
+                            step++;
+                            CompareList.Add(JoinList);
+
+                            int wynik1 = CompareList.IndexOf(JoinList);
+                            int wynik2 = CompareList.LastIndexOf(JoinList);
+
+                            wynik1 = wynik2 - wynik1;
+                            MessageBox.Show(wynik1.ToString());
+                            break;
+                        }
+
+                        
+
+
+                        
+
+
+                    }
+
+                   
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}

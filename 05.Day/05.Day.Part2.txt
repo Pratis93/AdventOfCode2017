@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _01.Christmas
+{
+    public partial class Christmas1 : Form
+    {
+        private object system;
+
+        public Christmas1()
+        {
+            InitializeComponent();
+        }
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"D:\GitHub\Repozytorium\Advent-of-Code\05.Day\05.puzzle.txt", ASCIIEncoding.ASCII))
+                {
+                    string words = reader.ReadToEnd();  //Przekazanie daynych z StreamReader do string.
+                    string[] rows = words.Split(new string[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries); //grupowanie danych 
+                    int[] introws = Array.ConvertAll(rows, int.Parse); //zmiana tablicy  string na int
+
+                    int ln = introws.Length; // ilosc elementow w tablicy
+
+                    int step = 0; //ilosc wykonanych krokow do wyjscia z tablicy
+                    int indeks = 0; // wskaznik na indeks
+                    
+                    //wyjdz z petli gdy indeks przekroczy ilosc lementow w tablicy
+                    while (indeks<ln)
+                    {
+                        if(introws[indeks] < 3)
+                        {
+                            introws[indeks] += +1;  //Zwieksz wartosc wskazywnego elementu o 1
+                            indeks += introws[indeks] - 1;  // skocz do nastepnego elementu z uwzglednieniem powyzszej indkrementacji.
+                        }else
+                        {
+                            introws[indeks] +=  -1 ;  //zmniejsz wartosc wskazywnego elementu o 1
+                            indeks += introws[indeks] +1;  // skocz do nastepnego elementu z uwzglednieniem powyzszej indkrementacji.
+                        }
+
+                        step++; // wykonano krok
+                    }
+                    MessageBox.Show(step.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+    }
+}
